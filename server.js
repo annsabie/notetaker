@@ -1,13 +1,13 @@
 const express = require("express");
-const jsonData = require("./db/db.json");
 const path = require("path");
-const fs = require("fs");
 const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
+const jsonData = require("./db/db.json");
 
-let storedData = jsonData;  
+let storedData = jsonData;
 
-const PORT = process.env.PORT || 3000;  
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 app.use(express.static('public'));
 app.use(express.json());
@@ -22,24 +22,22 @@ app.get('/notes', (req, res) => {
 });
 
 app.get('/api/notes', (req, res) => {
-  fs.readFile("./db/db.json")
-  res.status(200).json(storedData);
+  return res.status(200).json(storedData)
 });
 
 app.post('/api/notes', (req, res) => {
-  let notesData = req.body;
-  notesData.id = uuidv4();
+  let notesData = req.body
+  notesData.id = uuidv4()
 
-  storedData.push(notesData);
+  storedData.push(notesData)
 
-  fs.writeFile('./db/db.json', JSON.stringify(storedData), (err) =>{
-    err ? console.error(err) : console.log('Success!')}
+  fs.writeFile('./db/db.json', JSON.stringify(storedData), (err) => {
+    err ? console.error(err) : console.log('Success')}
   )
 
-  res.status(201).json(storedData)
+  res.status(200).json(storedData)
 });
 
-// Tell express to start listening!
 app.listen(PORT, () =>
-  console.log(`Express server listening on port ${PORT}!`)
+  console.log(`Express server listening at http://localhost:${PORT}`)
 );
